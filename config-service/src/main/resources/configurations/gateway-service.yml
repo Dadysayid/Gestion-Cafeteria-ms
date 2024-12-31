@@ -1,0 +1,43 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # Active la découverte automatique des services via Eureka
+          lower-case-service-id: true # Utiliser des ID en minuscules
+      routes:
+        # Route pour PRODUIT-SERVICE
+        - id: produit-service
+          uri: lb://produit-service
+          predicates:
+            - Path=/api/produits/**
+
+        # Route pour EMPLOYE-SERVICE
+        - id: employe-service
+          uri: lb://employe-service
+          predicates:
+            - Path=/api/employes/**
+
+        # Route pour COMMANDE-SERVICE
+        - id: commande-service
+          uri: lb://commande-service
+          predicates:
+            - Path=/api/commandes/**
+
+        # Route pour CLIENT-SERVICE
+        - id: client-service
+          uri: lb://client-service
+          predicates:
+            - Path=/api/clients/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
